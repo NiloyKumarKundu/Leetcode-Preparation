@@ -1,3 +1,30 @@
+void segregateElements(int arr[],int n) {
+        // Your code goes here
+        int newArray[n];
+        int j = 0;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] > 0) {
+                newArray[j] = arr[i];
+                j++;
+            }
+        }
+        if (j == n || j == 0) {
+            return;
+        }
+        
+        for (int i = 0; i < n; i++) {
+            if (arr[i] < 0) {
+                newArray[j] = arr[i];
+                j++;
+            }
+        }
+        
+        for (int i = 0; i < n; i++) {
+            arr[i] = newArray[i];
+        }
+}
+
+
 class Solution{
     public:
     void segregateElements(int arr[],int n)
