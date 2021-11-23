@@ -105,7 +105,7 @@ int partition (int arr[], int low, int high) {
 void quickSort(int arr[], int low, int high) {
     if (low < high) {
 		int position = partition(arr, low, high);
-		quickSort(arr, low, position);
+		quickSort(arr, low, position - 1);
 		quickSort(arr, position + 1, high);
 	}
 }
