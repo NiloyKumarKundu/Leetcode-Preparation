@@ -82,7 +82,7 @@ int partition (int arr[], int low, int high) {
 	int pivot = arr[low];
 	int i = low, j = high;
 
-    while (i < j) {
+	while (i < j) {
         while (arr[i] <= pivot) {
             i++;
         }
@@ -112,7 +112,7 @@ void quickSort(int arr[], int low, int high) {
 
 
 void solve() {
-	int arr[] = {10, 11, 12, 5, 6, 9, 2, 1};
+	int arr[] = {10, 11, 12, 5, 0, 3, 2, 9, 4, 1};
 	int size = sizeof(arr) / sizeof(arr[0]);
 	quickSort(arr, 0, size - 1);
 
