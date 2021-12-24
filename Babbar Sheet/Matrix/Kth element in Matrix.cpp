@@ -1,3 +1,6 @@
+// We can also use priority queue for this problem.
+// Using priority queue, time complixity will be O(K*logN)
+
 // 1st Approach
 
 // Time Complixity: O(2n * log(max_value))
@@ -67,6 +70,7 @@ int kthSmallest(int mat[MAX][MAX], int n, int k)
 
 // 2nd Approach
 
+// Time Complixity: O(32*row*(log(column)))
 
 // kth largest element in a 2d array sorted row-wise and column-wise
 #include<bits/stdc++.h>
