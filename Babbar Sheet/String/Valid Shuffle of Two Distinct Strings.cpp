@@ -83,7 +83,6 @@ Given, s1, s2 and res
 
 we have to check if the res string is a valid shuffle of s1 and s2.
 All the values should be in their same order.
-
 */
 
 void solve() {
@@ -92,6 +91,11 @@ void solve() {
     if (a.size() + b.size() != res.size()) {
 		cout << "NO\n";
 		return;
+	}
+    if (a.size() < b.size()) {
+		string temp = a;
+		a = b;
+		b = temp;
 	}
 
 	int flag = 0, i = 0, j = 0, k = 0;
