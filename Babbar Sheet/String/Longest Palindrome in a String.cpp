@@ -8,16 +8,16 @@ class Solution {
   public:
     string longestPalin (string S) {
         // code here
-        int start = 0, newStringLength = 1, low, high;
+        int start = 0, end = 1, low, high;
         
         for (int i = 1; i < S.length(); i++) {
             // even part
             low = i - 1;
             high = i;
             while (low >= 0 && high < S.length() && S[low] == S[high]) {
-                if (high - low + 1 > newStringLength) {
+                if (high - low + 1 > end) {
                     start = low;
-                    newStringLength = high - low + 1;
+                    end = high - low + 1;
                 }
                 low--;
                 high++;
@@ -28,19 +28,16 @@ class Solution {
             low = i - 1;
             high = i + 1;
             while (low >= 0 && high < S.length() && S[low] == S[high]) {
-                if (high - low + 1 > newStringLength) {
+                if (high - low + 1 > end) {
                     start = low;
-                    newStringLength = high - low + 1;
+                    end = high - low + 1;
                 }
                 low--;
                 high++;
             }
         }
         
-        string ans = "";
-        for (int i = start; i < start + newStringLength; i++) {
-            ans += S[i];
-        }
+        string ans = S.substr(start, end);
         return ans;
     }
 };
