@@ -75,14 +75,61 @@ struct Node
 
 class Solution
 {
+    
+    Node* detectCycle(Node* head) {
+        Node* hare = head;
+        Node* tortoise = head;
+        
+        while (hare != NULL && hare->next != NULL) {
+            tortoise = tortoise->next;
+            hare = hare->next->next;
+            if (tortoise == hare) {
+                return hare;
+            }
+        }
+        return NULL;
+    }
+    
     public:
     //Function to remove a loop in the linked list.
     void removeLoop(Node* head)
     {
         // code here
         // just remove the loop without losing any nodes
+        Node* tortoise = detectCycle(head);
+        
+        if (tortoise == NULL) {
+            return;
+        }
+        
+        Node* hare = head;
+        if (hare == tortoise) {
+            while (tortoise->next != hare) {
+                tortoise = tortoise->next;
+            }
+            tortoise->next = NULL;
+        } else {
+            while (hare->next != tortoise->next) {
+                hare = hare->next;
+                tortoise = tortoise->next;
+            }
+            tortoise->next = NULL;
+        }
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // { Driver Code Starts.
 
