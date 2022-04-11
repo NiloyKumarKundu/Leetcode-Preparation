@@ -1,0 +1,150 @@
+#include <bits/stdc++.h>
+#define Niloy
+#define int int64_t
+#define mx (int) 1e5 + 123
+#define MOD (int) 1e9 + 7
+#define pb push_back
+#define pairs pair<int, int>
+#define vi vector<int>
+#define vb vector<bool>
+#define vii vector<pairs>
+#define lb lower_bound
+#define ub upper_bound
+#define endl '\n'
+#define llu unsigned long long
+using namespace std;
+/* ----------------------------------------------------------------------------------- */
+
+// Input/Output
+#define fastInput ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+#define all(x) x.begin(), x.end()
+#define square(a) (a * a)
+#define mem(a, b) memset(a, b, sizeof(a))
+
+// Fractional Number
+#define fraction()        cout.unsetf(ios::floatfield); cout.precision(10); cout.setf(ios::fixed, ios::floatfield);
+
+// Direction Array
+int dx[] = {0, 0, 1, -1, 1, 1, -1, -1};
+int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
+
+// File I/O
+#define read(x)	 freopen(x, "r", stdin);
+#define write(x) freopen(x, "w", stdout);
+ 
+// Loops
+#define rep(i, a, n) for (int i = a; i < n; i++)
+#define REP(i, a, n) for (int i = a; i <= n; i++)
+#define rev(i, n, a) for (int i = n - 1; i >= a; i--)
+#define REV(i, n, a) for (int i = n; i >= a; i--)
+ 
+/* ----------------------------------------------------------------------------------- */
+ 
+#define Cases  cout << "Case " << ++Case << ": ";
+#define __test int tt; int Case=0; cin >> tt; while(tt--)
+#define showTime cerr << "time = " << (clock() / CLOCKS_PER_SEC) << " sec" << '\n';
+ 
+#define dbgA2(A, n, m) {cout<<"--> "<<#A<<" = \n";rep(i, 0, n){rep(j, 0, m){cout<<A[i][j]<<"";}cout<<"\n";}cout<<"\n";}
+#define dbgA(A, n) {cout<<" --> "<<#A<<" = (";rep(i, 0, n)cout<<A[i]<<" ";cout<<")\n";}
+#define dbg(args...) {string sss(#args);sss+=',';cout<<" --> ";debugger::call(all(sss), args);cout<<"\n";}
+ 
+/* ----------------------------------------------------------------------------------- */
+ 
+int gcd(int n, int m) { return m ? gcd(m, n % m) : n; }
+int lcm(int n, int m) { return n / gcd(n, m) * m; }
+ 
+struct debugger {
+    typedef string::iterator si;
+    static void call(si it, si ed) {}
+    template<typename T, typename ... aT>
+    static void call(si it, si ed, T a, aT... rest) {
+        string b;
+        for(; *it!=','; ++it)
+            if(*it!=' ')
+                b+=*it;
+        cout << b << "=" << a << " ";
+        call(++it, ed, rest...);
+    }
+};
+
+/* ----------------------------------------------------------------------------------- */
+
+
+// Input Overloading
+
+template <typename T> 
+istream &operator>>(istream &istream, vector<T> &v) {
+    for (auto &it : v)
+        cin >> it;
+    return istream;
+}
+
+/* ----------------------------------------------------------------------------------- */
+
+
+
+void input() {
+#ifdef Niloy
+    read("input.txt");  
+    write("output.txt");
+#endif
+}
+
+/* ----------------------------------------------------------------------------------- */
+
+
+void solve() {
+    long long l, r;
+    cin >> l >> r;
+	vector<long long> v;
+	long long a = 4, b = 7, len = 0;
+	queue<long long> q;
+	v.push_back(a);
+	v.push_back(b);
+	q.push(a);
+	q.push(b);
+	long long count = 0;
+	while (!q.empty()) {
+		long long x = q.front();
+		q.pop();
+		long long z = x * 10 + a;
+		long long y = x * 10 + b;
+		v.push_back(z);
+		v.push_back(y);
+		q.push(z);
+		q.push(y);
+		count++;
+        if (count > 510)
+			break;
+	}
+
+	// for (int i = 0; i < 10; i++) {
+	// 	cout << v[i] << " ";
+	// }
+	// cout << endl;
+
+	long long m = lower_bound(v.begin(), v.end(), l) - v.begin();
+	long long n = lower_bound(v.begin(), v.end(), r) - v.begin();
+	// cout << v[m] << " " << v[n] << endl;
+	long long ans = min(((v[m] - l) + 1) * v[m], (r - l + 1) * v[m]);
+
+	for (int i = m; i < n; i++) {
+		long long dist = min(v[i + 1] - v[i], r - v[i]);
+		// cout << dist << " " << v[i + 1] << " " << v[i] << endl;
+		ans += (dist * v[i + 1]);
+	}
+	cout << ans << endl;
+}
+
+int32_t main() {
+    // input();                                                             
+    fastInput;
+    solve();
+
+    // __test {
+    // 	solve();
+    // }
+
+    // showTime;
+    return 0;
+}
