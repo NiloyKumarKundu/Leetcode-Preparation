@@ -29,7 +29,7 @@ int dx[] = {0, 0, 1, -1, 1, 1, -1, -1};
 int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
 
 // File I/O
-#define read(x)	 freopen(x, "r", stdin);
+#define read(x)     freopen(x, "r", stdin);
 #define write(x) freopen(x, "w", stdout);
  
 // Loops
@@ -93,41 +93,38 @@ void input() {
 /* ----------------------------------------------------------------------------------- */
 
 void solve() {
-	int b, n, m;
-	cin >> b >> n >> m;
-	vector<int> keyboard, drives;
+    int b, n, m;
+    cin >> b >> n >> m;
+    vector<int> keyboard, drives;
     
-	for (int i = 0; i < n; i++) {
-		int x;
-		cin >> x;
-		keyboard.push_back(x);
-	}
+    for (int i = 0; i < n; i++) {
+        int x;
+        cin >> x;
+        keyboard.push_back(x);
+    }
 
     for (int i = 0; i < m; i++) {
-		int x;
-		cin >> x;
-		drives.push_back(x);
-	}
+        int x;
+        cin >> x;
+        drives.push_back(x);
+    }
 
     int sum = 0, ans = 0;
-	for (int i = 0; i < keyboard.size(); i++) {
-		sum = keyboard[i];
-
-		for (int j = 0; j < drives.size(); j++) {
-			sum += drives[j];
+    for (int i = 0; i < keyboard.size(); i++) {
+        for (int j = 0; j < drives.size(); j++) {
+            sum = keyboard[i] + drives[j];
             if (sum <= b) {
-				ans = max(sum, ans);
-			}
-			sum = keyboard[i];
-		}
-	}
+                ans = max(sum, ans);
+            }
+        }
+    }
 
-	if (ans == 0) {
-		cout << -1 << endl;
-		return;
-	}
+    if (ans == 0) {
+        cout << -1 << endl;
+        return;
+    }
 
-	cout << ans << endl;
+    cout << ans << endl;
 }
 
 int32_t main() {
@@ -136,7 +133,7 @@ int32_t main() {
     solve();
 
     // __test {
-    // 	solve();
+    //     solve();
     // }
 
     // showTime;
