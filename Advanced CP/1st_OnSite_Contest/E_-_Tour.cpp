@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define Niloy
 #define int int64_t
-#define mx (int) 1e4 + 123
+#define mx (int) 1e5 + 123
 #define MOD 1e9
 #define pb push_back
 #define pairs pair<int, int>
@@ -98,52 +98,47 @@ void input() {
 
 /* ----------------------------------------------------------------------------------- */
 
+bool vis[mx];
 vi adj[mx];
-int level[mx];
 
-void bfs(int s) {
-    mem(level, -1);
-	level[s] = 0;
-	queue<int> q;
-	q.push(s);
+int dfs(int u) {
+	vis[u] = 1;
+	int cnt = 1;            // for self loop
 
-    while (!q.empty()) {
-		int u = q.front();
-		q.pop();
-        for (auto v : adj[u]) {
-            if (level[v] == -1) {
-				level[v] = level[u] + 1;
-				q.push(v);
-			}
+	for (auto v : adj[u]) {
+        if (!vis[v]) {
+			cnt += dfs(v);
 		}
 	}
+	return cnt;
 }
 
 void solve() {
-    int n, m;
+	int n, m;
 	scan2(n, m);
-    rep(i, 0, mx) {
-		adj[i].clear();
+    rep(i, 0, m) {
+		int a, b;
+		scan2(a, b);
+		adj[a].pb(b);
+		// adj[b].pb(a);
 	}
 
-	rep(i, 0, m) {
-		int u, v;
-		scan2(u, v);
-		adj[u].pb(v);
-		adj[v].pb(u);
+	int ans = 0;
+    REP(i, 1, n) {
+		memset(vis, 0, sizeof(vis));
+		ans += dfs(i);
 	}
-	bfs(1);
-	cout << level[n] << endl;
+	cout << ans << endl;
 }
 
 int32_t main() {
     // input();
     // fastInput;
-    // solve();
+    solve();
 
-    __test {
-    	solve();
-    }
+    // __test {
+    // 	solve();
+    // }
 
     // showTime;
     return 0;
