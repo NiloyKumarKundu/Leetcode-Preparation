@@ -2,7 +2,7 @@
 #define Niloy
 #define int int64_t
 #define mx (int) 1e5 + 123
-#define MOD 1e9
+#define MOD (int) 1e9 + 7
 #define pb push_back
 #define pairs pair<int, int>
 #define vi vector<int>
@@ -24,27 +24,9 @@ using namespace std;
 // Fractional Number
 #define fraction()        cout.unsetf(ios::floatfield); cout.precision(10); cout.setf(ios::fixed, ios::floatfield);
 
-#define scan(a)			  scanf("%lld", &a);
-#define scan2(a, b)		  scanf("%lld %lld", &a, &b);
-#define scan3(a, b, c)	  scanf("%lld %lld %lld", &a, &b, &c);
-#define scan4(a, b, c, d) scanf("%lld %lld %lld %lld", &a, &b, &c, &d);
- 
-#define scanD(a)		  scanf("%lf", &a);
-#define scanD2(a, b)	  scanf("%lf %lf", &a, &b);
-#define scanD3(a, b, c)	  scanf("%lf %lf %lf", &a, &b, &c);
-#define scanD4(a, b, c, d)scanf("%lf %lf %lf %lf", &a, &b, &c, &d);
-
-
-#define print(a)		   printf("%lld\n", a);
-#define print2(a, b)	   printf("%lld %lld\n", a, b);
-#define print3(a, b, c)	   printf("%lld %lld %lld\n", a, b, c);
-#define print4(a, b, c, d) printf("%lld %lld %lld %lld\n", a, b, c, d);
- 
-#define printD(a)		   printf("%lf\n", a);
-#define printD2(a, b)	   printf("%lf %lf\n", a, b);
-#define printD3(a, b, c)   printf("%lf %lf %lf\n", a, b, c);
-#define printD4(a, b, c, d)printf("%lf %lf %lf %lf\n", a, b, c, d);
-#define printTwoD(a)	   printf("%.2lf\n", a);
+// Direction Array
+int dx[] = {0, 0, 1, -1, 1, 1, -1, -1};
+int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
 
 // File I/O
 #define read(x)	 freopen(x, "r", stdin);
@@ -55,9 +37,6 @@ using namespace std;
 #define REP(i, a, n) for (int i = a; i <= n; i++)
 #define rev(i, n, a) for (int i = n - 1; i >= a; i--)
 #define REV(i, n, a) for (int i = n; i >= a; i--)
-#define inputArray(a,n) rep(i, 0, n) cin >> a[i];
-#define copyArray(a,temp,n) rep(i, 0, n) temp[i]=a[i];
-#define printArray(a,n) rep(i, 0, n) cout << a[i] << " "; cout << endl;
  
 /* ----------------------------------------------------------------------------------- */
  
@@ -89,6 +68,21 @@ struct debugger {
 };
 
 /* ----------------------------------------------------------------------------------- */
+
+
+// Input Overloading
+
+template <typename T> 
+istream &operator>>(istream &istream, vector<T> &v) {
+    for (auto &it : v)
+        cin >> it;
+    return istream;
+}
+
+/* ----------------------------------------------------------------------------------- */
+
+
+
 void input() {
 #ifdef Niloy
     read("input.txt");  
@@ -98,42 +92,50 @@ void input() {
 
 /* ----------------------------------------------------------------------------------- */
 
-bool vis[mx];
-vi adj[mx];
+vi v;
+void subsetSum(int arr[], int n, int sum) {
+	bool subset[n + 1][sum + 1];
+	for (int i = 0; i <= n; i++)
+		subset[i][0] = true;
 
-int dfs(int u) {
-	vis[u] = 1;
-	int cnt = 1;            // for self loop
+	for (int i = 0; i <= sum; i++)
+		subset[0][i] = false;
 
-	for (auto v : adj[u]) {
-        if (!vis[v]) {
-			cnt += dfs(v);
+	v.pb(0);
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= sum; j++) {
+            if (j < arr[i - 1])
+				subset[i][j] = subset[i - 1][j];
+            
+            if (j >= arr[i - 1])
+                subset[i][j] = subset[i - 1][j] || subset[i - 1][j - arr[i - 1]];
+            
+            if (i == n && j <= sum / 2) {
+                if (subset[i][j])
+					v.pb(j);
+			}
 		}
 	}
-	return cnt;
 }
 
 void solve() {
-	int n, m;
-	scan2(n, m);
-    rep(i, 0, m) {
-		int a, b;
-		scan2(a, b);
-		adj[a].pb(b);
-		// adj[b].pb(a);
+	int n;
+	cin >> n;
+	int arr[n + 1], sum = 0;
+    rep(i, 0, n) {
+		cin >> arr[i];
+		sum += arr[i];
 	}
+	subsetSum(arr, n, sum);
+	int ans = sum - v[v.size() - 1];
 
-	int ans = 0;
-    REP(i, 1, n) {
-		memset(vis, 0, sizeof(vis));
-		ans += dfs(i);
-	}
 	cout << ans << endl;
 }
 
 int32_t main() {
     // input();
-    // fastInput;
+    fastInput;
     solve();
 
     // __test {
