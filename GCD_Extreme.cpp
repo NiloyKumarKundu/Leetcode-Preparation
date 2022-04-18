@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define Niloy
 #define int int64_t
-#define mx (int) 1e5 + 123
+#define mx (int) 1e6 + 123
 #define MOD (int) 1e9 + 7
 #define pb push_back
 #define pairs pair<int, int>
@@ -92,20 +92,51 @@ void input() {
 
 /* ----------------------------------------------------------------------------------- */
 
-void solve() {
-    rep(i, 1, 10) {
-		cout << i << ": ";
-		for (int j = i + 1; j <= 10; j++) {
-			cout << gcd(i, j) << " ";
-		}
-		cout << endl;
+
+
+
+int phi[mx];
+int f[mx];
+int sum[mx];
+
+void phiHarmonic(int n) {
+    REP(i, 1, n) {
+		phi[i] = i;
 	}
-	cout << endl;
+    REP(i, 2, n) {
+        if (phi[i] == i) {
+			for (int j = i; j <= n; j += i) {
+                phi[j] *= (i - 1);
+				phi[j] /= i;
+			}
+		}
+	}
+
+    REP(i, 1, n) {
+		for (int j = i; j <= n; j += i) {
+			f[j] += (i * phi[j / i]);
+		}
+	}
+
+    REP(i, 1, n) {
+		sum[i] = sum[i - 1] + f[i] - i;
+	}
+}
+
+
+void solve() {
+	int n;
+    while (cin >> n, n) {
+		cout << sum[n] << endl;
+	}
 }
 
 int32_t main() {
     // input();
     fastInput;
+	int lim = 1e6 + 2;
+	phiHarmonic(lim);
+
     solve();
 
     // __test {

@@ -93,66 +93,25 @@ void input() {
 /* ----------------------------------------------------------------------------------- */
 
 
+int phi[mx];
 
-bitset<mx> isPrime;        // 32 times faster than normal array.
-vi Prime;
-vi Phi;
-
-void primeGen(int n) {      // O(N)
-	for (int i = 3; i <= n; i += 2) {
-		isPrime[i] = 1;
+void phiHarmonic(int n) {
+    REP(i, 1, n) {
+		phi[i] = i;
 	}
-	isPrime[2] = 1;
-	int sq = sqrt(n);
-
-	for (int i = 3; i <= sq; i += 2) { 
-		if (isPrime[i]) {
-            for (int j = i * i; j <= n; j += (i * 2)) {
-                isPrime[j] = 0;
-            }
-        }
-	}
-
-	Prime.pb(2);
-	for (int i = 3; i <= n; i += 2) {
-		if (isPrime[i]) {
-			Prime.pb(i);
-		}
-	}
-}
-
-int phi(int n) {
-	int ret = n;
-    
-    for (auto p : Prime) {
-        if (p * p > n || n == 0) {
-			break;
-		}
-        if (n % p == 0) {
-			ret /= p;
-			ret *= (p - 1);
-            while (n % p == 0) {
-				n /= p;
+    REP(i, 2, n) {
+        if (phi[i] == i) {
+			for (int j = i; j <= n; j += i) {
+                phi[j] *= (i - 1);
+				phi[j] /= i;
 			}
 		}
 	}
-    if (n > 1) {
-        ret /= n;
-		ret *= (n - 1);
-	}
-	return ret;
 }
 
 
 int getCount(int divisor, int n) {
-	return Phi[n / divisor];
-}
-
-
-void precal() {
-    REP(i, 0, mx) {
-		Phi.push_back(phi(i));
-	}
+	return phi[n / divisor];
 }
 
 
@@ -180,8 +139,8 @@ int32_t main() {
     fastInput;
 
     int lim = 1e6;
-	primeGen(lim);
-	precal();
+	phiHarmonic(lim);
+
 	int sum = 0;
 	int n = 10;
     REP(i, 1, n) {
