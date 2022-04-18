@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define Niloy
 #define int int64_t
-#define mx (int) 1e5 + 123
+#define mx (int) 1e6 + 123
 #define MOD (int) 1e9 + 7
 #define pb push_back
 #define pairs pair<int, int>
@@ -93,36 +93,114 @@ void input() {
 /* ----------------------------------------------------------------------------------- */
 
 
-int getCount(int divisor, int n) {
+
+bitset<mx> isPrime;        // 32 times faster than normal array.
+vi Prime;
+vi Phi;
+
+void primeGen(int n) {      // O(N)
+	for (int i = 3; i <= n; i += 2) {
+		isPrime[i] = 1;
+	}
+	isPrime[2] = 1;
+	int sq = sqrt(n);
+
+	for (int i = 3; i <= sq; i += 2) { 
+		if (isPrime[i]) {
+            for (int j = i * i; j <= n; j += (i * 2)) {
+                isPrime[j] = 0;
+            }
+        }
+	}
+
+	Prime.pb(2);
+	for (int i = 3; i <= n; i += 2) {
+		if (isPrime[i]) {
+			Prime.pb(i);
+		}
+	}
+}
+
+int phi(int n) {
+	int ret = n;
     
+    for (auto p : Prime) {
+        if (p * p > n || n == 0) {
+			break;
+		}
+        if (n % p == 0) {
+			ret /= p;
+			ret *= (p - 1);
+            while (n % p == 0) {
+				n /= p;
+			}
+		}
+	}
+    if (n > 1) {
+        ret /= n;
+		ret *= (n - 1);
+	}
+	return ret;
+}
+
+
+int getCount(int divisor, int n) {
+	return Phi[n / divisor];
+}
+
+
+void precal() {
+    REP(i, 0, mx) {
+		Phi.push_back(phi(i));
+	}
 }
 
 
 void solve() {
 	int n, res = 0;
-	cin >> n;
-	for (int i = 1; i * i <= n; i++) {
-        if (n % i == 0) {
-			int d1 = i;
-			int d2 = n / i;
-			res += d1 * getCount(d1, n);
+	while (cin >> n, n) {
+		res = 0;
+		for (int i = 1; i * i <= n; i++) {
+			if (n % i == 0) {
+                int d1 = i;
+                int d2 = n / i;
+				res += d1 * getCount(d1, n);
 
-            if (d1 != d2)
-				res += d2 * getCount(d2, n);
+				if (d1 != d2) {
+					res += d2 * getCount(d2, n);
+				}
+			}
 		}
-	}
-	cout << res << endl;
+		cout << res << endl;
+    }
 }
 
 int32_t main() {
     // input();
     fastInput;
-    // solve();
 
-    __test {
-    	solve();
-    }
+    int lim = 1e6;
+	primeGen(lim);
+	precal();
+	int sum = 0;
+	int n = 10;
+    REP(i, 1, n) {
+		sum = 0;
+		cout << i << ": ";
+		REP(j, 1, i) {
+			sum += gcd(j, i);
+		}
+		cout << sum << endl;
+	}
+	cout  << endl;
+	// dbg(sum);
 
-    // showTime;
+	solve();
+
+	// __test {
+	// 	solve();
+	// }
+
+	// showTime;
     return 0;
 }
