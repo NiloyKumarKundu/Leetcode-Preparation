@@ -119,7 +119,7 @@ void phiHarmonic(int n) {
 	}
 
     REP(i, 1, n) {
-		sum[i] = sum[i - 1] + f[i] - i;
+		sum[i] = sum[i - 1] + f[i] - i; // gcd(i, i) = i, so subtract i from here.
 	}
 }
 
@@ -136,8 +136,7 @@ int32_t main() {
     fastInput;
 	int lim = 1e6 + 2;
 	phiHarmonic(lim);
-
-    solve();
+	solve();
 
     // __test {
     // 	solve();
