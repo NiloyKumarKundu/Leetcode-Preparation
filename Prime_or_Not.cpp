@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define Niloy
 #define int int64_t
-#define mx (int) 1e5 + 123
+#define mx (int) 1e7 + 123
 #define MOD (int) 1e9 + 7
 #define pb push_back
 #define pairs pair<int, int>
@@ -24,28 +24,6 @@ using namespace std;
 // Fractional Number
 #define fraction()        cout.unsetf(ios::floatfield); cout.precision(10); cout.setf(ios::fixed, ios::floatfield);
 
-#define scan(a)			  scanf("%lld", &a);
-#define scan2(a, b)		  scanf("%lld %lld", &a, &b);
-#define scan3(a, b, c)	  scanf("%lld %lld %lld", &a, &b, &c);
-#define scan4(a, b, c, d) scanf("%lld %lld %lld %lld", &a, &b, &c, &d);
- 
-#define scanD(a)		  scanf("%lf", &a);
-#define scanD2(a, b)	  scanf("%lf %lf", &a, &b);
-#define scanD3(a, b, c)	  scanf("%lf %lf %lf", &a, &b, &c);
-#define scanD4(a, b, c, d)scanf("%lf %lf %lf %lf", &a, &b, &c, &d);
-
-
-#define print(a)		   printf("%lld\n", a);
-#define print2(a, b)	   printf("%lld %lld\n", a, b);
-#define print3(a, b, c)	   printf("%lld %lld %lld\n", a, b, c);
-#define print4(a, b, c, d) printf("%lld %lld %lld %lld\n", a, b, c, d);
- 
-#define printD(a)		   printf("%lf\n", a);
-#define printD2(a, b)	   printf("%lf %lf\n", a, b);
-#define printD3(a, b, c)   printf("%lf %lf %lf\n", a, b, c);
-#define printD4(a, b, c, d)printf("%lf %lf %lf %lf\n", a, b, c, d);
-#define printTwoD(a)	   printf("%.2lf\n", a);
-
 // Direction Array
 int dx[] = {0, 0, 1, -1, 1, 1, -1, -1};
 int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
@@ -59,9 +37,6 @@ int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
 #define REP(i, a, n) for (int i = a; i <= n; i++)
 #define rev(i, n, a) for (int i = n - 1; i >= a; i--)
 #define REV(i, n, a) for (int i = n; i >= a; i--)
-#define inputArray(a,n) rep(i, 0, n) cin >> a[i];
-#define copyArray(a,temp,n) rep(i, 0, n) temp[i]=a[i];
-#define printArray(a,n) rep(i, 0, n) cout << a[i] << " "; cout << endl;
  
 /* ----------------------------------------------------------------------------------- */
  
@@ -93,6 +68,21 @@ struct debugger {
 };
 
 /* ----------------------------------------------------------------------------------- */
+
+
+// Input Overloading
+
+template <typename T> 
+istream &operator>>(istream &istream, vector<T> &v) {
+    for (auto &it : v)
+        cin >> it;
+    return istream;
+}
+
+/* ----------------------------------------------------------------------------------- */
+
+
+
 void input() {
 #ifdef Niloy
     read("input.txt");  
@@ -102,37 +92,83 @@ void input() {
 
 /* ----------------------------------------------------------------------------------- */
 
-int bigMod(int base, int power, int mod) {
-    int ans = 1;
-    while (power > 0) {
-        if (power % 2) {
-            ans *= base;
-            ans %= mod;
-        }
-        power /= 2;
-        base *= base;
-        base %= mod;
-    }
-	return ans;
-}
 
-void solve() {
-    int b, p, m;
-    while (cin >> b >> p >> m) {
-		int ans = bigMod(b, p, m);
-		cout << ans << endl;
+
+
+bool isPrime[mx];
+vi Prime;
+
+void primeGen(int n) {      // O(N)
+	for (int i = 3; i <= n; i += 2) {
+		isPrime[i] = 1;
+	}
+	isPrime[2] = 1;
+	int sq = sqrt(n);
+
+	for (int i = 3; i <= sq; i += 2) { 
+		if (isPrime[i]) {
+            for (int j = i * i; j <= n; j += (i * 2)) {
+                isPrime[j] = 0;
+            }
+        }
+	}
+
+	Prime.pb(2);
+	for (int i = 3; i <= n; i += 2) {
+		if (isPrime[i]) {
+			Prime.pb(i);
+		}
 	}
 }
 
 
+
+// Amar jodi lage 1e5, tahole ami dibo (1e5 / 2)
+
+const int MX = 5e7+123;
+bool seive[MX];
+vi prime;
+
+void seiveGen(int limit) {
+    limit += 100;
+    int sqrtn = sqrt(limit);
+    for(int i = 3; i <= sqrtn; i += 2) {
+        if(!seive[i>>1]) {
+            for(int j = i * i; j < limit; j += i + i) {
+                seive[j>>1] = 1;
+            }
+        }
+    }
+    
+    prime.pb(2);
+    for(int i = 3; i < limit; i += 2) {
+        if(!seive[i>>1]) prime.pb(i);
+    }
+}
+
+
+void solve() {
+	int n;
+	cin >> n;
+    if (seive[n]) {
+		cout << "YES\n";
+	} else {
+		cout << "NO\n";
+	}
+}
+
 int32_t main() {
     // input();
-    // fastInput;
-    solve();
+    fastInput;
+    // primeGen(mx);
+    int lim = 1e8;
+	seiveGen(MX);
 
-    // __test {
-    // 	solve();
-    // }
+    // solve();
+
+    __test {
+    	solve();
+    }
 
     // showTime;
     return 0;
