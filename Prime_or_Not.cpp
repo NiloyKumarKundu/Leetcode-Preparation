@@ -93,76 +93,64 @@ void input() {
 /* ----------------------------------------------------------------------------------- */
 
 
-
-
-bool isPrime[mx];
-vi Prime;
-
-void primeGen(int n) {      // O(N)
-	for (int i = 3; i <= n; i += 2) {
-		isPrime[i] = 1;
-	}
-	isPrime[2] = 1;
-	int sq = sqrt(n);
-
-	for (int i = 3; i <= sq; i += 2) { 
-		if (isPrime[i]) {
-            for (int j = i * i; j <= n; j += (i * 2)) {
-                isPrime[j] = 0;
-            }
-        }
-	}
-
-	Prime.pb(2);
-	for (int i = 3; i <= n; i += 2) {
-		if (isPrime[i]) {
-			Prime.pb(i);
-		}
-	}
+lli mulmod(lli a, lli b,lli c){
+    lli x = 0,y=a%c;
+    while(b > 0){
+    if(b%2 == 1){
+        x = (x+y)%c;
+    }
+    y = (y*2LL)%c;
+    b /= 2;
+    }
+    return x%c;
 }
 
 
-
-// Amar jodi lage 1e5, tahole ami dibo (1e5 / 2)
-
-const int MX = 5e7+123;
-bool seive[MX];
-vi prime;
-
-void seiveGen(int limit) {
-    limit += 100;
-    int sqrtn = sqrt(limit);
-    for(int i = 3; i <= sqrtn; i += 2) {
-        if(!seive[i>>1]) {
-            for(int j = i * i; j < limit; j += i + i) {
-                seive[j>>1] = 1;
-            }
-        }
-    }
-    
-    prime.pb(2);
-    for(int i = 3; i < limit; i += 2) {
-        if(!seive[i>>1]) prime.pb(i);
-    }
+int binPower(int a , int n , int mod)
+{
+	int res = 1;
+ 
+	while(n)
+	{
+		if(n & 1)
+		res = bigMod(res , a , mod);
+ 
+		n >>= 1;
+		a = bigMod(a , a , mod);
+	}
+ 
+	return res % mod;
 }
 
+bool isPrime(int n , int iterations = 5)
+{
+	if(n <= 4)
+	return n == 2 || n == 3;
+ 
+	for(int i=1;i<=iterations;i++)
+	{
+		int a = 2 + rand() % (n - 3);
+		int res = binPower(a , n - 1 , n);
+ 
+		if(res != 1) return false;
+	}
+ 
+	return true;
+}
+ 
 
 void solve() {
 	int n;
 	cin >> n;
-    if (seive[n]) {
-		cout << "YES\n";
-	} else {
-		cout << "NO\n";
-	}
+	if(isPrime(n)) 
+        cout<<"YES"<<endl;
+	else		   
+        cout<<"NO"<<endl;
 }
 
 int32_t main() {
     // input();
     fastInput;
-    // primeGen(mx);
-    int lim = 1e8;
-	seiveGen(MX);
 
     // solve();
 
