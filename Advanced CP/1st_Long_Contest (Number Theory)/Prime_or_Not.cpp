@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 #define Niloy
 #define int int64_t
-#define mx (int) 1e7 + 123
+#define mx (int) 1e5 + 123
 #define MOD (int) 1e9 + 7
 #define pb push_back
 #define pairs pair<int, int>
@@ -92,66 +92,66 @@ void input() {
 
 /* ----------------------------------------------------------------------------------- */
 
+using u64 = uint64_t;
+using u128 = __uint128_t;
 
-lli mulmod(lli a, lli b,lli c){
-    lli x = 0,y=a%c;
-    while(b > 0){
-    if(b%2 == 1){
-        x = (x+y)%c;
+u64 binpower(u64 base, u64 e, u64 mod) {
+    u64 result = 1;
+    base %= mod;
+    while (e) {
+        if (e & 1)
+            result = (u128)result * base % mod;
+        base = (u128)base * base % mod;
+        e >>= 1;
     }
-    y = (y*2LL)%c;
-    b /= 2;
+    return result;
+}
+
+bool check_composite(u64 n, u64 a, u64 d, int s) {
+    u64 x = binpower(a, d, n);
+    if (x == 1 || x == n - 1)
+        return false;
+    for (int r = 1; r < s; r++) {
+        x = (u128)x * x % n;
+        if (x == n - 1)
+            return false;
     }
-    return x%c;
+    return true;
+};
+
+bool MillerRabin(u64 n, int iter=5) { // returns true if n is probably prime, else returns false.
+    if (n < 4)
+        return n == 2 || n == 3;
+
+    int s = 0;
+    u64 d = n - 1;
+    while ((d & 1) == 0) {
+        d >>= 1;
+        s++;
+    }
+
+    for (int i = 0; i < iter; i++) {
+        int a = 2 + rand() % (n - 3);
+        if (check_composite(n, a, d, s))
+            return false;
+    }
+    return true;
 }
 
-
-int binPower(int a , int n , int mod)
-{
-	int res = 1;
- 
-	while(n)
-	{
-		if(n & 1)
-		res = bigMod(res , a , mod);
- 
-		n >>= 1;
-		a = bigMod(a , a , mod);
-	}
- 
-	return res % mod;
-}
-
-bool isPrime(int n , int iterations = 5)
-{
-	if(n <= 4)
-	return n == 2 || n == 3;
- 
-	for(int i=1;i<=iterations;i++)
-	{
-		int a = 2 + rand() % (n - 3);
-		int res = binPower(a , n - 1 , n);
- 
-		if(res != 1) return false;
-	}
- 
-	return true;
-}
- 
 
 void solve() {
 	int n;
 	cin >> n;
-	if(isPrime(n)) 
-        cout<<"YES"<<endl;
-	else		   
-        cout<<"NO"<<endl;
+    if (MillerRabin(n)) {
+		cout << "YES\n";
+	} else {
+		cout << "NO\n";
+	}
 }
 
 int32_t main() {
     // input();
     fastInput;
-
     // solve();
 
     __test {
