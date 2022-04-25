@@ -29,7 +29,7 @@ int dx[] = {0, 0, 1, -1, 1, 1, -1, -1};
 int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
 
 // File I/O
-#define read(x)	 freopen(x, "r", stdin);
+#define read(x)     freopen(x, "r", stdin);
 #define write(x) freopen(x, "w", stdout);
  
 // Loops
@@ -92,18 +92,55 @@ void input() {
 
 /* ----------------------------------------------------------------------------------- */
 
+
+bool vis[mx];
+vi adj[mx];
+
+int dfs(int u) {
+    vis[u] = 1;
+    int sum = 1;
+    for (auto v : adj[u]) {
+        if (!vis[v]) {
+            sum += dfs(v);
+        }
+    }
+    return sum;
+}
+
 void solve() {
-    
+    memset(vis, 0, sizeof(vis));
+
+    int n, e, c_lib, c_road;
+    cin >> n >> e >> c_lib >> c_road;
+    for (int i = 0; i <= n; i++) {
+        adj[i].clear();
+    }
+    rep(i, 0, e) {
+        int u, v;
+        cin >> u >> v;
+        adj[u].pb(v);
+        adj[v].pb(u);
+    }
+
+    int ans = 0;
+    REP(i, 1, n) {
+        if (!vis[i]) {
+            int pathSize = dfs(i);
+            // dbg(pathSize, i);
+            ans += c_lib + min(c_lib, c_road) * (pathSize - 1);
+        }
+    }
+    cout << ans << endl;
 }
 
 int32_t main() {
     // input();
     fastInput;
-    solve();
+    // solve();
 
-    // __test {
-    // 	solve();
-    // }
+    __test {
+        solve();
+    }
 
     // showTime;
     return 0;
