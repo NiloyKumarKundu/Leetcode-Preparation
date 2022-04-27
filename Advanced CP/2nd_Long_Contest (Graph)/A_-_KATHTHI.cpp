@@ -1,8 +1,9 @@
 #include <bits/stdc++.h>
 #define Niloy
 #define int int64_t
-#define mx (int) 1e5 + 123
+#define mx (int) 1000 + 5
 #define MOD (int) 1e9 + 7
+#define INF (int) 1e9 + 10
 #define pb push_back
 #define pairs pair<int, int>
 #define vi vector<int>
@@ -25,8 +26,8 @@ using namespace std;
 #define fraction()        cout.unsetf(ios::floatfield); cout.precision(10); cout.setf(ios::fixed, ios::floatfield);
 
 // Direction Array
-int dx[] = {0, 0, 1, -1, 1, 1, -1, -1};
-int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
+int dx[] = {0, 0, 1, -1};
+int dy[] = {1, -1, 0, 0};
 
 // File I/O
 #define read(x)	 freopen(x, "r", stdin);
@@ -92,18 +93,90 @@ void input() {
 
 /* ----------------------------------------------------------------------------------- */
 
+char mat[mx][mx];
+int dist[mx][mx];
+
+bool isValid(int x, int y, int r, int c) {
+	return (x >= 0 && x < r && y >= 0 && y < c);
+}
+
+void bfs_0_1(int startX, int startY, int r, int c) {
+	dist[startX][startY] = 0;
+	deque<pairs> q;
+	pairs p;
+	q.push_front({startX, startY});
+	
+	while (!q.empty()) {
+		p = q.front();
+		q.pop_front();
+		int x = p.first;
+		int y = p.second;
+
+        rep(i, 0, 4) {
+			int tempX = x + dx[i];
+			int tempY = y + dy[i];
+
+            if (isValid(tempX, tempY, r, c)) {
+                if (mat[tempX][tempY] == mat[x][y] && dist[tempX][tempY] > dist[x][y]) {
+					q.push_front({tempX, tempY});
+					dist[tempX][tempY] = dist[x][y];
+				} else if (mat[tempX][tempY] != mat[x][y]) {
+                    if (dist[tempX][tempY] > dist[x][y] + 1) {
+						q.push_back({tempX, tempY});
+						dist[tempX][tempY] = dist[x][y] + 1;
+					}
+				}
+			}
+		}
+	}
+}
+
+void init(int r, int c) {
+    rep(i, 0, r) {
+        rep(j, 0, c) {
+			dist[i][j] = INF;
+		}
+	}
+}
+
+void display(int r, int c) {
+	rep(i, 0, r) {
+		rep(j, 0, c) {
+			cout << mat[i][j] << " ";
+		}
+		cout << endl;
+	}
+	rep(i, 0, r) {
+		rep(j, 0, c) {
+			cout << dist[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
+
 void solve() {
-    
+	int r, c;
+	cin >> r >> c;
+
+	rep(i, 0, r) {
+		rep(j, 0, c) {
+			cin >> mat[i][j];
+		}
+	}
+	// display(r, c);
+	init(r, c);
+	bfs_0_1(0, 0, r, c);
+	cout << dist[r - 1][c - 1] << endl;
 }
 
 int32_t main() {
     // input();
     fastInput;
-    solve();
+    // solve();
 
-    // __test {
-    // 	solve();
-    // }
+    __test {
+    	solve();
+    }
 
     // showTime;
     return 0;
