@@ -124,7 +124,8 @@ void bfs(int src) {
 }
 
 void solve() {
-	cin >> n >> m;
+	int src, dest;
+	cin >> n >> m >> src >> dest;
 	dist.resize(m);
 
     while (m--) {
@@ -138,8 +139,8 @@ void solve() {
 		dist[i] = INT_MAX;
 	}
 
-	bfs(0);
-	cout << dist[n - 1] << endl;
+	bfs(src);
+	cout << dist[dest] << endl;
 }
 
 int32_t main() {
