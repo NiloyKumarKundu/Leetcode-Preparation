@@ -3,7 +3,8 @@
 #define int int64_t
 #define mx (int) 1e5 + 123
 // constexpr int64_t INF = std::numeric_limits<int64_t>::max();
-#define INF (int) 1e9 + 7
+// #define INF (int) 1e9 + 7
+const int INF = 1<<29;
 #define MOD (int) 1e9 + 7
 #define pb push_back
 #define pairs pair<int, int>
@@ -42,7 +43,7 @@ int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
  
 /* ----------------------------------------------------------------------------------- */
  
-#define Cases  cout << "Case " << ++Case << ": ";
+#define Cases  cout << "Scenario #" << ++Case << endl;
 #define __test int tt; int Case=0; cin >> tt; while(tt--)
 #define showTime cerr << "time = " << (clock() / CLOCKS_PER_SEC) << " sec" << '\n';
  
@@ -107,62 +108,104 @@ struct node {
 	}
 };
 
+string city[mx];
+map<string, int> cityIndex;
 vector<node> edges;
 int n, m;
 
-void bellmanFord(int src) {
+
+int bellmanFord(int stopCount) {
 	vi dist(n, INF);
 	dist[0] = 0;
 
-	rep(i, 0, n) {
-        for (auto it : edges) {
-            if (dist[it.u] + it.wt < dist[it.v]) {
-				dist[it.v] = dist[it.u] + it.wt;
-			}
+	REP(i, 0, stopCount) {
+        int temp[n];
+
+        rep(i, 0, n) {
+			temp[i] = dist[i];
 		}
+
+        for (auto it : edges) {
+			temp[it.v] = min(temp[it.v], dist[it.u] + it.wt);
+		}
+
+        for(int i = 0; i < n; i ++) {
+            dist[i] = temp[i];
+        }
 	}
+	return dist[n - 1];
 }
 
-bool hasNegativeCycle() {
-    for (auto it : edges) {
-        if (dist[it.u] + it.wt < dist[it.v]) {
-			return true;
-		}
-	}
-	return false;
+int setIndex(string cityName) {
+	int currentIndex = cityIndex.size();
+	cityIndex[cityName] = currentIndex;
+	return currentIndex;
+}
+
+int getIndex(string cityName) {
+	return cityIndex[cityName];
 }
 
 void solve() {
-	int src, dest;
-	cin >> n >> m >> src >> dest;
+	cityIndex.clear();
+	edges.clear();
+	city->clear();
+	cin >> n;
 
-	while (m--) {
-		int x, y, wt;
-		cin >> x >> y >> wt;
-		edges.push_back(node(x, y, wt));
+	rep(i, 0, n) {
+		cin >> city[i];
+		setIndex(city[i]);
 	}
 
-	bellmanFord(src);
+	cin >> m;
+    rep(i, 0, m) {
+		string x, y;
+		int wt;
+		cin >> x;
+		cin >> y;
+		cin >> wt;
+		int first = getIndex(x);
+		int second = getIndex(y);
+		edges.push_back(node(first, second, wt));
+	}
 
-	if (hasNegativeCycle()) {
-		cout << "Negative Cycle Found!\n";
-	} else {
-        rep(i, 0, n) {
-			cout << i << " " << dist[i] << endl;
-		}
-		cout << endl;
+    // for (auto i : edges) {
+	// 	cout << i.u << " " << i.v << " " << i.wt << endl;
+	// }
+	// cout << endl;
+
+	int q, stopCount;
+	cin >> q;
+    while (q--) {
+		cin >> stopCount;
+        // dbg(stopCount);
+		int minDistance = bellmanFord(stopCount);
+
+        // rep(i, 0, n) {
+		// 	cout << dist[i] << " ";
+		// }
+		// cout << endl;
+
+		if (minDistance != INF) {
+            cout << "Total cost of flight(s) is $" << minDistance << endl;
+        } else {
+            cout << "No satisfactory flights" << endl;
+        }
 	}
 }
 
 int32_t main() {
     // input();
     fastInput;
-    solve();
+    // solve();
+	__test {
+		Cases;
+		solve();
+        if (tt) {
+		    cout << endl;
+        }
+	}
 
-    // __test {
-    // 	solve();
-    // }
-
-    // showTime;
+	// showTime;
     return 0;
 }
