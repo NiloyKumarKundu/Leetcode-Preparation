@@ -98,47 +98,73 @@ void input() {
 /* ----------------------------------------------------------------------------------- */
 
 vector<pairs> graph[mx];
-vi dist;
+vi vis, par, dist;
 priority_queue<pairs, vector<pairs>, greater<pairs>> pq;
 int n, m;
 
-void dijkstra(int src) {
-	dist.resize(src + 10, INF);
+bool dijkstra(int src, int end) {
+	dist.resize(mx, INF);
+	par.resize(mx, 0);
+	vis.resize(mx, 0);
 	dist[src] = 0;
 	pq.push({0, src});
+	par[src] = -1;
 
-    while (!pq.empty()) {
+	while (!pq.empty()) {
 		int prevDist = pq.top().first;
 		int prev = pq.top().second;
 		pq.pop();
 
-        for (auto i : graph[prev]) {
+        if (prev == end) {
+			return true;
+		}
+
+		vis[prev] = 1;
+		for (auto i : graph[prev]) {
 			int next = i.first;
 			int nextDist = i.second;
 
-            if (dist[next] > dist[prev] + nextDist) {
+            if (!vis[next] && dist[next] >= dist[prev] + nextDist) {
 				dist[next] = dist[prev] + nextDist;
 				pq.push({dist[next], next});
+				par[next] = prev;
 			}
 		}
 	}
+	return false;
 }
 
-void solve() {
-	int src, dest;
-	cin >> n >> m >> src >> dest;
 
-    while (m--) {
+
+
+void solve() {
+	cin >> n >> m;
+
+	while (m--) {
 		int x, y, wt;
 		cin >> x >> y >> wt;
 		graph[x].push_back({y, wt});
 		graph[y].push_back({x, wt});
 	}
 
-	dijkstra(src);
-	cout << dist[dest] << endl;
-}
+	if (dijkstra(1, n)) {
+		vi path;
+        int i = n;
 
+        while (i != -1) {
+            path.push_back(i);
+            i = par[i];
+        }
+
+        REV(i, path.size() - 1, 0) {
+            cout << path[i] << " ";
+        }
+        cout << endl;
+	} else {
+		cout << "-1\n";
+	}
+	
+}
 
 int32_t main() {
     // input();

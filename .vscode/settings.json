@@ -2,6 +2,11 @@
     "files.associations": {
         "iostream": "cpp",
         "algorithm": "cpp",
-        "random": "cpp"
+        "random": "cpp",
+        "memory": "cpp",
+        "regex": "cpp",
+        "span": "cpp",
+        "utility": "cpp",
+        "limits": "cpp"
     }
 }
