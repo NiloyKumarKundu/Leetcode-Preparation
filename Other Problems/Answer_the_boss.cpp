@@ -1,8 +1,10 @@
+// Time Complexity: O(N + E)
+// Space Complexity: O(N) + O(N)
+
 #include <bits/stdc++.h>
 #define Niloy
 #define int int64_t
-#define mx (int) 1e5 + 123
-constexpr int64_t INF = std::numeric_limits<int64_t>::max();
+#define mx (int) 1e3+5
 #define MOD (int) 1e9 + 7
 #define pb push_back
 #define pairs pair<int, int>
@@ -41,7 +43,7 @@ int dy[] = {1, -1, 0, 0, 1, -1, 1, -1};
  
 /* ----------------------------------------------------------------------------------- */
  
-#define Cases  cout << "Case " << ++Case << ": ";
+#define Cases  cout << "Scenario #" << ++Case << ":\n";
 #define __test int tt; int Case=0; cin >> tt; while(tt--)
 #define showTime cerr << "time = " << (clock() / CLOCKS_PER_SEC) << " sec" << '\n';
  
@@ -55,17 +57,17 @@ int gcd(int n, int m) { return m ? gcd(m, n % m) : n; }
 int lcm(int n, int m) { return n / gcd(n, m) * m; }
  
 struct debugger {
-	typedef string::iterator si;
-	static void call(si it, si ed) {}
-	template<typename T, typename ... aT>
-	static void call(si it, si ed, T a, aT... rest) {
-		string b;
-		for(; *it!=','; ++it)
-			if(*it!=' ')
-				b+=*it;
-		cout << b << "=" << a << " ";
-		call(++it, ed, rest...);
-	}
+    typedef string::iterator si;
+    static void call(si it, si ed) {}
+    template<typename T, typename ... aT>
+    static void call(si it, si ed, T a, aT... rest) {
+        string b;
+        for(; *it!=','; ++it)
+            if(*it!=' ')
+                b+=*it;
+        cout << b << "=" << a << " ";
+        call(++it, ed, rest...);
+    }
 };
 
 /* ----------------------------------------------------------------------------------- */
@@ -75,9 +77,9 @@ struct debugger {
 
 template <typename T> 
 istream &operator>>(istream &istream, vector<T> &v) {
-	for (auto &it : v)
-		cin >> it;
-	return istream;
+    for (auto &it : v)
+        cin >> it;
+    return istream;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -86,26 +88,97 @@ istream &operator>>(istream &istream, vector<T> &v) {
 
 void input() {
 #ifdef Niloy
-	read("input.txt");  
-	write("output.txt");
+    read("input.txt");  
+    write("output.txt");
 #endif
 }
 
 /* ----------------------------------------------------------------------------------- */
 
-void solve() {
+ 
+vi graph[mx];
+vi indegree(mx, 0);
+vii ans;
+int n, m;
+ 
+void topoSort() {
+	priority_queue<pairs, vector<pairs>, greater<pairs> > q;
+    indegree.resize(n + 10, 0);
 	
+	rep(i, 0, n) {
+		for (auto j : graph[i]) {
+			indegree[j]++;      // calculating indegree
+		}
+	}
+ 
+    // rep(i, 0, n) {
+	// 	cout << indegree[i] << " ";
+	// }
+	// cout << endl;
+ 
+	int start = 1;
+ 
+	rep(i, 0, n) {
+        if (indegree[i] == 0) {
+			q.push({start, i});
+			// cout << start << " " << i << endl;
+			ans.push_back({start, i});
+		}
+	}
+ 
+ 
+ 
+	while (!q.empty()) {
+		int level = q.top().first;
+		int node = q.top().second;
+		q.pop();
+ 
+		bool check = false;
+		for (auto i : graph[node]) {
+			indegree[i]--;
+            if (indegree[i] == 0) {
+				check = true;
+				q.push({level + 1, i});
+			    // cout << start << " " << i << endl;
+				ans.push_back({level + 1, i});
+			}
+		}
+	}
+}
+ 
+void solve() {
+	cin >> n >> m;
+    rep(i, 0, mx) {
+		graph[i].clear();
+	}
+	indegree.clear();
+	ans.clear();
+ 
+	while (m--) {
+		int x, y;
+		cin >> x >> y;
+		graph[y].push_back(x);
+	}
+ 
+	topoSort();
+
+	sort(ans.begin(), ans.end());
+
+	for (auto i : ans) {
+		cout << i.first << " " << i.second << endl;
+	}
 }
 
 int32_t main() {
-	// input();
-	fastInput;
-	solve();
+    // input();
+    fastInput;
+    // solve();
 
-	// __test {
-	// 	solve();
-	// }
+    __test {
+		Cases;
+		solve();
+	}
 
-	// showTime;
-	return 0;
+    // showTime;
+    return 0;
 }

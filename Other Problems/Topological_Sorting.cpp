@@ -1,8 +1,13 @@
+// Time Complexity: O(N + E)
+// Space Complexity: O(N) + O(N)            // Apart from the adjacency nodes       // visited array + Stack
+
+// Axulary Space Complexity: O(N) // for dfs call
+
+
 #include <bits/stdc++.h>
 #define Niloy
 #define int int64_t
 #define mx (int) 1e5 + 123
-constexpr int64_t INF = std::numeric_limits<int64_t>::max();
 #define MOD (int) 1e9 + 7
 #define pb push_back
 #define pairs pair<int, int>
@@ -55,17 +60,17 @@ int gcd(int n, int m) { return m ? gcd(m, n % m) : n; }
 int lcm(int n, int m) { return n / gcd(n, m) * m; }
  
 struct debugger {
-	typedef string::iterator si;
-	static void call(si it, si ed) {}
-	template<typename T, typename ... aT>
-	static void call(si it, si ed, T a, aT... rest) {
-		string b;
-		for(; *it!=','; ++it)
-			if(*it!=' ')
-				b+=*it;
-		cout << b << "=" << a << " ";
-		call(++it, ed, rest...);
-	}
+    typedef string::iterator si;
+    static void call(si it, si ed) {}
+    template<typename T, typename ... aT>
+    static void call(si it, si ed, T a, aT... rest) {
+        string b;
+        for(; *it!=','; ++it)
+            if(*it!=' ')
+                b+=*it;
+        cout << b << "=" << a << " ";
+        call(++it, ed, rest...);
+    }
 };
 
 /* ----------------------------------------------------------------------------------- */
@@ -75,9 +80,9 @@ struct debugger {
 
 template <typename T> 
 istream &operator>>(istream &istream, vector<T> &v) {
-	for (auto &it : v)
-		cin >> it;
-	return istream;
+    for (auto &it : v)
+        cin >> it;
+    return istream;
 }
 
 /* ----------------------------------------------------------------------------------- */
@@ -86,26 +91,87 @@ istream &operator>>(istream &istream, vector<T> &v) {
 
 void input() {
 #ifdef Niloy
-	read("input.txt");  
-	write("output.txt");
+    read("input.txt");  
+    write("output.txt");
 #endif
 }
 
 /* ----------------------------------------------------------------------------------- */
 
+vi graph[mx];
+vi visited;
+stack<int> st;
+bool cycleFound = false;
+int n, m;
+
+void topoSort(int node) {
+	// dbg(node, visited[node]);
+	visited[node] = 1;
+	sort(graph[node].begin(), graph[node].end());
+	// dbg("ache\n", node);
+
+	for (int i = graph[node].size() - 1; i >= 0; i--) {
+		int nextNode = graph[node][i];
+		if (visited[nextNode] == 0) {
+			topoSort(nextNode);
+		} else if (visited[nextNode] == 1) {
+			cycleFound = true;
+			return;
+		}
+	}
+	visited[node] = 2;
+	st.push(node);
+}
+
 void solve() {
-	
+	cin >> n >> m;
+	visited.resize(n + 10, 0);
+
+    while (m--) {
+		int x, y;
+		cin >> x >> y;
+		graph[x].push_back(y);      // directed
+	}
+
+    // REP(i, 1, n) {
+	// 	cout << visited[i] << " ";
+	// }
+	// cout << endl;
+
+	REV(i, n, 1) {
+		// dbg(visited[i]);
+		if (visited[i] == 0) {
+			topoSort(i);
+		}
+	}
+
+	vi topo;
+    while (!st.empty()) {
+		topo.push_back(st.top());
+		st.pop();
+	}
+
+    if (cycleFound) {
+		cout << "Sandro fails.\n";
+		return;
+	}
+	// dbg(topo.size());
+
+	for (auto i : topo) {
+		cout << i << " ";
+	}
+	cout << endl;
 }
 
 int32_t main() {
-	// input();
-	fastInput;
-	solve();
+    // input();
+    fastInput;
+    solve();
 
-	// __test {
-	// 	solve();
-	// }
+    // __test {
+    // 	solve();
+    // }
 
-	// showTime;
-	return 0;
+    // showTime;
+    return 0;
 }
