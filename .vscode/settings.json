@@ -9,6 +9,8 @@
         "utility": "cpp",
         "limits": "cpp",
         "ostream": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "__hash_table": "cpp",
+        "unordered_map": "cpp"
     }
 }
