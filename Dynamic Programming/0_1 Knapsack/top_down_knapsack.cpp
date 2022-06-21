@@ -106,6 +106,8 @@ void init() {
 }
 
 void knapsack(vi wt, vi val, int W, int n) {
+    init();
+    
 	for (int i = 1; i < n + 1; i++) {
 		for (int j = 1; j < W + 1; j++) {
             if (wt[i - 1] <= j) {
